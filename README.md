@@ -1,14 +1,14 @@
-# Finance
-Application de gestion de budget personnel hors ligne
+# Finance 
+Application web de gestion de budget personnel
 
 ## Installation
 
 1. Installez [Node.js](https://nodejs.org/en/download/) sur votre ordinateur
-2. Clonez ce dépôt avec la commande `git clone https://github.com/your-username/finance.git`
+2. Clonez ce dépôt avec la commande `git clone https://github.com/DevDhomm/finance-local-app.git`
 3. Installez les dépendances du projet avec la commande `npm install`
 4. Lancez l'application avec la commande `npm run dev`
 
-## Fonctionnalités
+## ⚡ Fonctionnalités
 
 * Gestion des transactions (dépenses et revenus)
 * Gestion des catégories de dépenses
@@ -18,13 +18,22 @@ Application de gestion de budget personnel hors ligne
 * Affichage des budgets et des objectifs par catégorie
 * Possibilité de modifier et de supprimer les transactions
 
-## Technologies utilisées
+## 🚀 Technologies utilisées
 
 * [Next.js](https://nextjs.org/)
 * [React](https://reactjs.org/)
 * [Firebase](https://firebase.google.com/)
 * [Chart.js](https://www.chartjs.org/)
 
-## Auteurs
+## 👨‍💻 Auteurs
 
-* [Your Name](https://github.com/DevDhomm)
+* [DevDhomm](https://github.com/DevDhomm)
+
+## Contribuez
+
+Si vous souhaitez contribuer à ce projet, vous pouvez Fork ce dépôt, apporter vos modifications et faire une pull request.
+
+## Voir en ligne
+
+Vous pouvez voir le site en ligne [ici](https://finance-devdhomm.vercel.app/).
+
