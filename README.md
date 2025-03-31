@@ -37,3 +37,6 @@ Si vous souhaitez contribuer à ce projet, vous pouvez Fork ce dépôt, apporter
 
 Vous pouvez voir le site en ligne [ici](https://finance-local-app.vercel.app/).
 
+## Version Desktop
+
+Vous pouvez voir la version Desktop [ICI](https://github.com/DevDhomm/FLAD)
