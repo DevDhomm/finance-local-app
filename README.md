@@ -35,5 +35,5 @@ Si vous souhaitez contribuer à ce projet, vous pouvez Fork ce dépôt, apporter
 
 ## Voir en ligne
 
-Vous pouvez voir le site en ligne [ici](https://finance-devdhomm.vercel.app/).
+Vous pouvez voir le site en ligne [ici](https://finance-local-app.vercel.app/).
 
