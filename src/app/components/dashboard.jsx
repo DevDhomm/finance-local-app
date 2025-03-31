@@ -166,7 +166,7 @@ const Dashboard = () => {
                 </div>
             )}
 
-            <h1>{storedUser} Dashboard</h1>
+            {/* <h1>{storedUser} Dashboard</h1> */}
             <button className={Styles.addButton} onClick={() => setShowForm(true)}>
   <img src="/add.svg" alt="add" />
   <span className={Styles.hoverText}>Ajouter</span>

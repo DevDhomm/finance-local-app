@@ -64,6 +64,7 @@
 }
 
 .form{
+    position: fixed;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -273,7 +274,7 @@
     .history table thead{
         background-color: #201f1f;
     }
-    body{
+    .body{
         background-color: #201f1f;
     }
     .statCard {
