@@ -18,11 +18,7 @@ const Dashboard = () => {
     const [dailyData, setDailyData] = useState({ deposit: {}, withdrawal: {} });
     const money = localStorage.getItem("money") || "$";
     const [count, setCount] = useState([]);
-
-
-
-  
-        const [conseil, setConseil] = useState('');
+     const [conseil, setConseil] = useState('');
       
        useEffect(() => {
           setConseil(getConseilDuJour());

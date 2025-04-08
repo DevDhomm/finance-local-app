@@ -7,7 +7,7 @@
 } */
 
 
-:root {
+.App {
     --bg-main: #f9f9fb;
     --bg-card: #ffffff;
     --text-primary: #1e1e2f;
