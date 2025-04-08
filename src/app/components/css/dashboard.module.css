@@ -5,6 +5,18 @@
     margin-right: 10px;
     background-color: aliceblue;
 } */
+:root {
+    --bg-main: #f9f9fb;
+    --bg-card: #ffffff;
+    --text-primary: #1e1e2f;
+    --text-secondary: #6c757d;
+    --accent-green: #00b894;
+    --accent-red: #d63031;
+    --border-color: #e0e0e0;
+    --shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  
 .deleteButton{
     background-color: #201f1f00;
     border-radius: 50%;
@@ -56,7 +68,7 @@
     justify-content: center;
     height: 100%;
     width: 100%;
-    background: #201f1f41;
+    background: (--bg-main);
     z-index: 2;
     right: 0;
     left: 0;
@@ -112,8 +124,8 @@
     box-shadow: 0 0 1px #ccc;
     padding: 10px;
     border-radius: 10px;
-    margin-left: 10px;
-    margin-right: 10px;
+    margin-left: 30px;
+    margin-right: 30px;
     text-align: center;
     height: 300px;
     overflow: scroll;
@@ -138,7 +150,6 @@
     z-index: 1;
     background-color: #e0dddd;
 }
-
 
 .history table th{
     padding: 10px;
@@ -196,7 +207,7 @@
 
 .statsGrid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(200px, 1fr));
+    grid-template-columns: repeat(3, minmax(200px, 1fr));
     gap: 1rem;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -205,12 +216,17 @@
   }
   
   .statCard {
-    border-radius: 8px;
-    padding: 1rem;
-    text-align: center;
-    transition: transform 0.2s ease;
-    border: 1px solid #ccc;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-color);
+    max-height: 150px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
   
   .statCard:hover {
@@ -218,14 +234,21 @@
   }
   
   .statCard h3 {
-    margin: 0;
+
     font-size: 1rem;
     color: #888;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
   }
   
   .statCard p {
     margin: 0.5rem 0 0 0;
-    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #3d4246;
+    
   }
 
   .form h3{
@@ -269,34 +292,20 @@
     
   }
 
-@media (prefers-color-scheme: dark) {
 
-    .history table thead{
-        background-color: #201f1f;
-    }
-    .body{
-        background-color: #201f1f;
-    }
-    .statCard {
-        
-        border: 1px solid #cccccc1f;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      }
-      .form{
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        background-color: #201f1f;
-        box-shadow: 0 0 1px #ccc;
-        padding: 20px;
-        border-radius: 10px;
-        width: 100%;
-        max-width: 500px;
-        margin: 0 auto;
-    }
-    
-
-
-    
+  .counter {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--text-primary);
+    transition: color 0.3s ease;
+  }
+  
+  .counterPositive {
+    color: var(--accent-green);
+    font-weight: bold;
+  }
+  .counterNegative {
+    color: var(--accent-red);
+    font-weight: bold;
   }
   

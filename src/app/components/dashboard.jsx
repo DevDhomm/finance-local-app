@@ -1,8 +1,9 @@
 'use client'
 import { useEffect, useState } from 'react';
 import Styles from './css/dashboard.module.css';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from "chart.js";
-import { Pie, Line } from "react-chartjs-2";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement, animator } from "chart.js";
+import { Pie, Line, Bar } from "react-chartjs-2";
+import {User ,BanknoteArrowDown, BanknoteArrowUp,ArrowRightLeft,FolderPen, HandCoins } from "lucide-react"
 import "chart.js/auto";
 
 const Dashboard = () => {
@@ -13,6 +14,7 @@ const Dashboard = () => {
     const [stats, setStats] = useState({ deposits: 0, withdrawals: 0 });
     const [dailyData, setDailyData] = useState({ deposit: {}, withdrawal: {} });
     const money = localStorage.getItem("money") || "$";
+    const [count, setCount] = useState([]);
     async function addTransaction(e) {
         e.preventDefault();
         const amount = e.target[1].value;
@@ -69,8 +71,22 @@ const Dashboard = () => {
     useEffect(() => {
         const storedTransactions = JSON.parse(localStorage.getItem("transactions")) || [];
         setTransactions(storedTransactions);
+        
         updateStatsAndDailyData(storedTransactions);
+ 
+          
     }, []);
+
+    useEffect(() => {
+        const countByType = transactions.reduce((acc, tx) => {
+            acc[tx.type] = (acc[tx.type] || 0) + 1;
+            
+            return acc;
+          }, {});
+          
+          
+          setCount(countByType);
+    }, [transactions]);
 
     const pieData = {
         labels: ["Dépôt", "Retrait"],
@@ -99,37 +115,52 @@ const Dashboard = () => {
     const depositData = lineLabels.map(label => dailyData.deposit[label] || 0);
     const withdrawalData = lineLabels.map(label => dailyData.withdrawal[label] || 0);
 
-    const lineData = {
+    const barData = {
         labels: lineLabels,
         datasets: [
             {
                 label: 'Dépôts',
                 data: depositData,
-                fill: false,
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                borderColor: '#00b894',
                 borderWidth: 1,
             },
             {
                 label: 'Retraits',
                 data: withdrawalData,
-                fill: false,
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
                 borderColor: 'rgba(255, 99, 132, 1)',
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
                 borderWidth: 1,
             },
         ],
     };
-
-    const lineOptions = {
-        responsive: true,
-        plugins: {
-            title: {
-                display: true,
-                text: 'Montant des dépôts et retraits par jour',
+    
+    const config = {
+        type: 'bar',
+        
+        options: {
+            
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Dépôts vs Retraits par Jour',
+                    font: {
+                        size: 16
+                    }
+                },
             },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    min: -100,
+                    max: 100
+                }
+            }
         },
     };
+    
+    
 
     ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
@@ -174,22 +205,47 @@ const Dashboard = () => {
             <div className={Styles.body}>
                 <div className={Styles.statsGrid}>
                     <div className={Styles.statCard}>
-                        <h3>Nombre de transactions</h3>
-                        <p>{transactions.length}</p>
+                        <h3> <User color="#343232" /> Utilisateur</h3>
+                        <p> <FolderPen /> Nom: {storedUser}</p>
+                        <p> <HandCoins color="#343232" /> Devise: {money}</p>
+                    </div>
+                    <div className={Styles.statCard}>
+                        <h3> <ArrowRightLeft color="#343232" /> Nombre de transactions</h3>
+                        <p> <BanknoteArrowUp /> Dépôt: {count.deposit}</p>
+                        <p> <BanknoteArrowDown /> Retrait: {count.withdrawal}</p>
                     </div>
                     <div className={Styles.statCard}>
                         <h3>Montant total des dépôts</h3>
-                        <p>{stats.deposits} {money} </p>
+                        <p className={Styles.counterPositive}>{stats.deposits} {money} </p>
                     </div>
                     <div className={Styles.statCard}>
                         <h3>Montant total des retraits</h3>
-                        <p>{stats.withdrawals} {money} </p>
+                        <p className={Styles.counterNegative}>{stats.withdrawals} {money} </p>
+                    </div>
+
+                    <div className={Styles.statCard}>
+                        <h3>Dernière transaction</h3>
+                        <div>
+  {transactions.length > 0 ? (
+    <div>
+      <p>Type: {transactions[transactions.length - 1].type}</p>
+      <p>Montant: {transactions[transactions.length - 1].amount}</p>
+    </div>
+  ) : (
+    <p>Aucune transaction disponible</p>
+  )}
+</div>
                     </div>
                     <div className={Styles.statCard} 
                             style={{ backgroundColor: stats.deposits >= stats.withdrawals ? "rgba(75, 192, 192, 0.2)" : "rgba(255, 99, 132, 0.2)" }}
                         >
                         <h3>Solde</h3>
-                        <p>{stats.deposits - stats.withdrawals} {money}</p>
+                        <p style={
+                            {
+                                "fontWeight" : "bold",
+                            }
+                            
+                        }>{stats.deposits - stats.withdrawals} {money}</p>
                     </div>
                 </div>
                 <div className={Styles.analytics}>
@@ -197,7 +253,7 @@ const Dashboard = () => {
                         <Pie data={pieData} options={pieOptions} />
                     </div>
                     <div className={Styles.analytic}>
-                        <Line data={lineData} options={lineOptions} />
+                        <Bar data={barData} options={config} />
                     </div>
                 </div>
                 <div className={Styles.history}>
