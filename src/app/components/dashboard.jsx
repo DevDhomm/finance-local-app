@@ -3,9 +3,49 @@ import { useEffect, useState } from 'react';
 import Styles from './css/dashboard.module.css';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement, animator } from "chart.js";
 import { Pie, Line, Bar } from "react-chartjs-2";
-import {User ,BanknoteArrowDown, BanknoteArrowUp,ArrowRightLeft,FolderPen, HandCoins } from "lucide-react"
+import {User, Info, Wallet ,BanknoteArrowDown, BanknoteArrowUp,ArrowRightLeft,FolderPen, HandCoins } from "lucide-react"
 import "chart.js/auto";
 
+
+const conseilsEconomie = [
+    "Afin d'économiser, définissez une limite hebdomadaire de retrait.",
+    "Évitez les petites dépenses impulsives - elles s'accumulent vite !",
+    "Utilisez la règle du 50/30/20 : 50% besoins, 30% envies, 20% épargne.",
+    "Automatisez vos économies avec un virement mensuel vers un compte épargne.",
+    "Comparez les prix avant chaque achat important.",
+    "Tenez un journal de vos dépenses pour identifier les fuites budgétaires.",
+    "Attendez 24 heures avant tout achat non essentiel pour éviter les impulsions."
+  ];
+
+  function getConseilDuJour() {
+    const maintenant = new Date();
+    const debutAnnee = new Date(maintenant.getFullYear(), 0, 0);
+    const diff = maintenant - debutAnnee;
+    const unJour = 1000 * 60 * 60 * 24;
+    const jourDeLAnnee = Math.floor(diff / unJour);
+    
+    // Sélectionne un conseil en fonction du jour (modulo pour rester dans les bornes du tableau)
+    const indexConseil = jourDeLAnnee % conseilsEconomie.length;
+    return conseilsEconomie[indexConseil];
+  }
+
+  function getConseilDuJourPersistant() {
+    const aujourdHui = new Date().toDateString();
+    const stockage = localStorage.getItem('conseilEconomie');
+    
+    if (stockage) {
+      const { date, conseil } = JSON.parse(stockage);
+      if (date === aujourdHui) return conseil;
+    }
+    
+    const nouveauConseil = getConseilDuJour();
+    localStorage.setItem('conseilEconomie', JSON.stringify({
+      date: aujourdHui,
+      conseil: nouveauConseil
+    }));
+    
+    return nouveauConseil;
+  }
 const Dashboard = () => {
     const storedUser = localStorage.getItem("userFinance") || "Utilisateur";
     const [transactionType, setTransactionType] = useState("deposit");
@@ -15,6 +55,18 @@ const Dashboard = () => {
     const [dailyData, setDailyData] = useState({ deposit: {}, withdrawal: {} });
     const money = localStorage.getItem("money") || "$";
     const [count, setCount] = useState([]);
+
+
+
+  
+        const [conseil, setConseil] = useState('');
+      
+       useEffect(() => {
+          setConseil(getConseilDuJour());
+        }, []);
+ 
+
+
     async function addTransaction(e) {
         e.preventDefault();
         const amount = e.target[1].value;
@@ -215,12 +267,22 @@ const Dashboard = () => {
                         <p> <BanknoteArrowDown /> Retrait: {count.withdrawal}</p>
                     </div>
                     <div className={Styles.statCard}>
-                        <h3>Montant total des dépôts</h3>
-                        <p className={Styles.counterPositive}>{stats.deposits} {money} </p>
+                        <h3> <BanknoteArrowUp/> Montant total des dépôts</h3>
+                        <p style={
+                            {
+                                "color": "#00b894",
+                                "fontWeight": "bold"
+                            }
+                        } className={Styles.counterPositive}>{stats.deposits} {money} </p>
                     </div>
                     <div className={Styles.statCard}>
-                        <h3>Montant total des retraits</h3>
-                        <p className={Styles.counterNegative}>{stats.withdrawals} {money} </p>
+                        <h3> <BanknoteArrowDown/> Montant total des retraits</h3>
+                        <p style={
+                            {
+                                "color": "#d63031",
+                                "fontWeight": "bold"
+                            }
+                        } >{stats.withdrawals} {money} </p>
                     </div>
 
                     <div className={Styles.statCard}>
@@ -236,10 +298,14 @@ const Dashboard = () => {
   )}
 </div>
                     </div>
+                    <div className={Styles.statCard}>
+                        <h3><Info /> Conseil du jour</h3>
+                        <p> {conseil} </p>
+                    </div>
                     <div className={Styles.statCard} 
                             style={{ backgroundColor: stats.deposits >= stats.withdrawals ? "rgba(75, 192, 192, 0.2)" : "rgba(255, 99, 132, 0.2)" }}
                         >
-                        <h3>Solde</h3>
+                        <h3> <Wallet /> Solde</h3>
                         <p style={
                             {
                                 "fontWeight" : "bold",

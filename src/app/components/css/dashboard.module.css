@@ -209,8 +209,10 @@
 
 
 .statsGrid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(200px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -254,6 +256,9 @@
     
   }
 
+
+
+
   .form h3{
     text-align: center;
     margin-bottom: 0px;
@@ -296,19 +301,3 @@
   }
 
 
-  .counter {
-    font-size: 2rem;
-    font-weight: bold;
-    color: var(--text-primary);
-    transition: color 0.3s ease;
-  }
-  
-  .counterPositive {
-    color: var(--accent-green);
-    font-weight: bold;
-  }
-  .counterNegative {
-    color: var(--accent-red);
-    font-weight: bold;
-  }
-  
