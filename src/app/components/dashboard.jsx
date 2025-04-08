@@ -5,47 +5,10 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Toolti
 import { Pie, Line, Bar } from "react-chartjs-2";
 import {User, Info, Wallet ,BanknoteArrowDown, BanknoteArrowUp,ArrowRightLeft,FolderPen, HandCoins } from "lucide-react"
 import "chart.js/auto";
+import getConseilDuJour from './conseil';
 
 
-const conseilsEconomie = [
-    "Afin d'économiser, définissez une limite hebdomadaire de retrait.",
-    "Évitez les petites dépenses impulsives - elles s'accumulent vite !",
-    "Utilisez la règle du 50/30/20 : 50% besoins, 30% envies, 20% épargne.",
-    "Automatisez vos économies avec un virement mensuel vers un compte épargne.",
-    "Comparez les prix avant chaque achat important.",
-    "Tenez un journal de vos dépenses pour identifier les fuites budgétaires.",
-    "Attendez 24 heures avant tout achat non essentiel pour éviter les impulsions."
-  ];
 
-  function getConseilDuJour() {
-    const maintenant = new Date();
-    const debutAnnee = new Date(maintenant.getFullYear(), 0, 0);
-    const diff = maintenant - debutAnnee;
-    const unJour = 1000 * 60 * 60 * 24;
-    const jourDeLAnnee = Math.floor(diff / unJour);
-    
-    // Sélectionne un conseil en fonction du jour (modulo pour rester dans les bornes du tableau)
-    const indexConseil = jourDeLAnnee % conseilsEconomie.length;
-    return conseilsEconomie[indexConseil];
-  }
-
-  function getConseilDuJourPersistant() {
-    const aujourdHui = new Date().toDateString();
-    const stockage = localStorage.getItem('conseilEconomie');
-    
-    if (stockage) {
-      const { date, conseil } = JSON.parse(stockage);
-      if (date === aujourdHui) return conseil;
-    }
-    
-    const nouveauConseil = getConseilDuJour();
-    localStorage.setItem('conseilEconomie', JSON.stringify({
-      date: aujourdHui,
-      conseil: nouveauConseil
-    }));
-    
-    return nouveauConseil;
-  }
 const Dashboard = () => {
     const storedUser = localStorage.getItem("userFinance") || "Utilisateur";
     const [transactionType, setTransactionType] = useState("deposit");
