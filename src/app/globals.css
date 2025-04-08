@@ -1,3 +1,10 @@
+
+@font-face {
+  font-family: 'Ubuntu';
+  src: url('./fonts/Ubuntu/Ubuntu-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
 :root {
   --bg-main: #f9f9fb;
   --bg-card: #ffffff;
@@ -19,7 +26,7 @@ body {
 body {
   color: var(--foreground);
   background: var(--bg-main);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Ubuntu', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

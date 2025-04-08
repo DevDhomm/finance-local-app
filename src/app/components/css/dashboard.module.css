@@ -5,6 +5,8 @@
     margin-right: 10px;
     background-color: aliceblue;
 } */
+
+
 :root {
     --bg-main: #f9f9fb;
     --bg-card: #ffffff;
@@ -62,6 +64,7 @@
     display: inline;
   }
 .dashboard{
+    font-family: 'Ubuntu', sans-serif;
     position: absolute;
     display: flex;
     align-items: center;
