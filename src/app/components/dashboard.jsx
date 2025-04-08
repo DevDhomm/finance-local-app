@@ -54,50 +54,118 @@ const Dashboard = () => {
         updateStatsAndDailyData(updatedTransactions);
     }
 
+    const getDateRange = () => {
+        const dates = [];
+        for (let i = 29; i >= 0; i--) {
+            const date = new Date();
+            date.setDate(date.getDate() - i);
+            dates.push(date.toISOString().split('T')[0]); // Format YYYY-MM-DD
+        }
+        return dates;
+    };
+
     function updateStatsAndDailyData(updatedTransactions) {
-        // Calculate stats and daily data
-        const deposits = updatedTransactions
-            .filter(t => t.type === "deposit")
-            .reduce((sum, t) => sum + parseFloat(t.amount), 0);
-        const withdrawals = updatedTransactions
-            .filter(t => t.type === "withdrawal")
-            .reduce((sum, t) => sum + parseFloat(t.amount), 0);
-        setStats({ deposits, withdrawals });
-
-        const deposit = {};
-        const withdrawal = {};
-
+       
+    
+        // Initialisation des données pour 30 jours
+        const initializeDailyData = (dates) => {
+            return dates.reduce((acc, date) => {
+                acc.deposit[date] = 0;
+                acc.withdrawal[date] = 0;
+                return acc;
+            }, { deposit: {}, withdrawal: {} });
+        };
+    
+        const dateRange = getDateRange();
+        let dailyData = initializeDailyData(dateRange);
+    
+        // Remplissage des données
         updatedTransactions.forEach((transaction) => {
-            const date = new Date(transaction.timestamp).toLocaleDateString();
-            if (transaction.type === "deposit") {
-                deposit[date] = (deposit[date] || 0) + parseFloat(transaction.amount);
-            } else if (transaction.type === "withdrawal") {
-                withdrawal[date] = (withdrawal[date] || 0) + parseFloat(transaction.amount);
+            const date = new Date(transaction.timestamp).toISOString().split('T')[0];
+            if (dateRange.includes(date)) {
+                const type = transaction.type;
+                dailyData[type][date] += parseFloat(transaction.amount);
             }
         });
-
-        setDailyData({ deposit, withdrawal });
+    
+        // Mise à jour des états
+        const deposits = Object.values(dailyData.deposit).reduce((a, b) => a + b, 0);
+        const withdrawals = Object.values(dailyData.withdrawal).reduce((a, b) => a + b, 0);
+        setStats({ deposits, withdrawals });
+        setDailyData(dailyData);
     }
-
-    useEffect(() => {
-        const storedTransactions = JSON.parse(localStorage.getItem("transactions")) || [];
-        setTransactions(storedTransactions);
-        
-        updateStatsAndDailyData(storedTransactions);
- 
-          
-    }, []);
-
-    useEffect(() => {
-        const countByType = transactions.reduce((acc, tx) => {
-            acc[tx.type] = (acc[tx.type] || 0) + 1;
-            
-            return acc;
-          }, {});
-          
-          
-          setCount(countByType);
-    }, [transactions]);
+    
+    // Configuration des données pour les graphiques
+    const lineLabels = getDateRange(); // Utilisez la même fonction que ci-dessus
+    const depositData = lineLabels.map(date => dailyData.deposit[date]);
+    const withdrawalData = lineLabels.map(date => dailyData.withdrawal[date]);
+    
+    // Nouvelle configuration améliorée pour le graphique
+    const barData = {
+        labels: lineLabels.map(date => 
+            new Date(date).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })
+        ),
+        datasets: [
+            {
+                label: 'Dépôts',
+                data: depositData,
+                backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                borderColor: '#00b894',
+                borderWidth: 1,
+                tension: 0.4,
+            },
+            {
+                label: 'Retraits',
+                data: withdrawalData,
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                borderColor: '#ff7675',
+                borderWidth: 1,
+                tension: 0.4,
+            }
+        ],
+    };
+    
+    const config = {
+        type: 'line',
+        options: {
+            responsive: true,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: (context) => {
+                            const label = context.dataset.label || '';
+                            const value = context.parsed.y || 0;
+                            return `${label}: ${value.toFixed(2)} XOF`;
+                        }
+                    }
+                },
+                title: {
+                    display: true,
+                    text: 'Activité sur 30 jours',
+                    font: { size: 18 }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { maxTicksLimit: 10 }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: { 
+                        display: true, 
+                        text: 'Montant (XOF)',
+                        padding: 10
+                    },
+                    grace: '5%'
+                }
+            }
+        },
+    };
 
     const pieData = {
         labels: ["Dépôt", "Retrait"],
@@ -122,56 +190,28 @@ const Dashboard = () => {
         },
     };
 
-    const lineLabels = Object.keys(dailyData.deposit).sort();
-    const depositData = lineLabels.map(label => dailyData.deposit[label] || 0);
-    const withdrawalData = lineLabels.map(label => dailyData.withdrawal[label] || 0);
 
-    const barData = {
-        labels: lineLabels,
-        datasets: [
-            {
-                label: 'Dépôts',
-                data: depositData,
-                backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                borderColor: '#00b894',
-                borderWidth: 1,
-            },
-            {
-                label: 'Retraits',
-                data: withdrawalData,
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1,
-            },
-        ],
-    };
     
-    const config = {
-        type: 'bar',
+    useEffect(() => {
+        const storedTransactions = JSON.parse(localStorage.getItem("transactions")) || [];
+        setTransactions(storedTransactions);
         
-        options: {
+        updateStatsAndDailyData(storedTransactions);
+ 
+          
+    }, []);
+
+    useEffect(() => {
+        const countByType = transactions.reduce((acc, tx) => {
+            acc[tx.type] = (acc[tx.type] || 0) + 1;
             
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Dépôts vs Retraits par Jour',
-                    font: {
-                        size: 16
-                    }
-                },
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    min: -100,
-                    max: 100
-                }
-            }
-        },
-    };
-    
-    
+            return acc;
+          }, {});
+          
+          
+          setCount(countByType);
+    }, [transactions]);
+
 
     ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
