@@ -124,7 +124,7 @@
 }
 
 .history{
-    box-shadow: 0 0 1px #ccc;
+    box-shadow: 0 0 10px #acabab;
     padding: 10px;
     border-radius: 10px;
     margin-left: 30px;
@@ -133,6 +133,7 @@
     height: 300px;
     overflow: scroll;
     margin-bottom: 40px;
+    
     
 }
 
@@ -181,6 +182,7 @@
 }
 
 .analytics{
+
     display: flex;
     flex-direction: row-reverse;
     width: 100%;
@@ -191,15 +193,20 @@
 
 
 .analytic{
-    box-shadow: 0 0 1px #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 10px #acabab;
     padding: 10px;
     border-radius: 10px;
     margin: 5px;
     width: 65%;
+    
 }
 
 .analytic1{
-    box-shadow: 0 0 1px #ccc;
+
+  box-shadow: 0 0 10px #acabab;
     padding: 10px;
     border-radius: 10px;
     margin: 5px;
@@ -267,10 +274,14 @@
     justify-content: space-between;
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: 790px) {
     .statsGrid {
-      grid-template-columns: repeat(1, minmax(200px, 1fr));
+      display: grid;
     }
+  }
+
+  @media (max-width: 600px) {
+ 
     .analytics{
         display: flex;
         flex-direction: column-reverse;
@@ -285,17 +296,20 @@
         padding: 10px;
         border-radius: 10px;
         margin: 5px;
-        width: 95%;
-        height: 200px;
+        width: 100%;
+        height: 300px;
     }
     
     .analytic1{
+      display: flex;
+      align-items: center;
+      justify-content: center;
         box-shadow: 0 0 1px #ccc;
         padding: 10px;
         border-radius: 10px;
         margin: 5px;
         width: 95%;
-        height: 200px;
+        height: 300px;
     }
     
   }

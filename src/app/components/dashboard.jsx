@@ -36,7 +36,7 @@ const Dashboard = () => {
   const money = localStorage.getItem("money") || "$";
   const [count, setCount] = useState([]);
   const [conseil, setConseil] = useState("");
-
+  const [best, setBest] = useState([]);
   useEffect(() => {
     setConseil(getConseilDuJour());
   }, []);
@@ -156,7 +156,7 @@ const Dashboard = () => {
     style: { backgroundColor: "white" },
     options: {
       responsive: true,
-      
+
       interaction: {
         mode: "index",
         intersect: false,
@@ -234,6 +234,15 @@ const Dashboard = () => {
     }, {});
 
     setCount(countByType);
+    const highestTransaction = transactions.reduce((max, current) => {
+      if (parseInt(current.amount) > parseInt(max.amount)) {
+        return current;
+      }
+      return max;
+    }, transactions[0]);
+
+    setBest(highestTransaction);
+   
   }, [transactions]);
 
   ChartJS.register(
@@ -388,13 +397,27 @@ const Dashboard = () => {
               {transactions.length > 0 ? (
                 <div>
                   <p>Type: {transactions[transactions.length - 1].type}</p>
-                  <p>Montant: {transactions[transactions.length - 1].amount} {money} </p>
+                  <p>
+                    Montant: {transactions[transactions.length - 1].amount}{" "}
+                    {money}{" "}
+                  </p>
                 </div>
               ) : (
                 <p>Aucune transaction disponible</p>
               )}
             </div>
           </div>
+              {best && (
+                          <div className={Styles.statCard}>
+                          <h3>Meilleur transaction</h3>
+                          
+                          <p>Type: {best.type}</p>
+                          <p>
+                            Montant: {best.amount} {money}{" "}
+                          </p>
+                        </div>
+              )}
+
           <div className={Styles.statCard}>
             <h3>
               <Info /> Conseil du jour
@@ -424,10 +447,14 @@ const Dashboard = () => {
         </div>
         <div className={Styles.analytics}>
           <div className={Styles.analytic1}>
-            <Pie data={pieData} options={pieOptions} style={{ display: 'inline' }} />
+            <Pie
+              data={pieData}
+              options={pieOptions}
+              style={{ display: "inline" }}
+            />
           </div>
           <div className={Styles.analytic}>
-            <Bar data={barData} options={config} tyle={{ display: 'inline' }} />
+            <Bar data={barData} options={config} tyle={{ display: "inline" }} />
           </div>
         </div>
         <div className={Styles.history}>
